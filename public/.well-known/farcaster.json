@@ -1,17 +1,17 @@
 {
   "accountAssociation": {
     "header": "eyJmaWQiOjYwMjMsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHg0NTYxMzExNjFmODNDN0Q3ZkRBMTViMzJhNWY3QzIxRkQ0RTI3RTk2In0",
-    "payload": "eyJkb21haW4iOiJiaWxsYm9hcmRzLm9yYml0ZXIud2Vic2l0ZSJ9",
-    "signature": "MHg0YTgxMjYxYTJkYWVmMTg4MTY0ZWQ1Yzg4OTBiN2Q4MTZjMTk1OWVlODA2MDNlY2FiN2UxOTEwMzcyZWE5YTMxNDgwMjA3MWI4NDM3Zjg1MmQ5NzJhNDI0ZTFmYTdkMjFmNGUwOTA1M2UwNjllMWRlNTY0N2ZkODljZmI4OTIwMjFi"
+    "payload": "eyJkb21haW4iOiJiaWxsYm9hcmRzLmNsb3VkIn0",
+    "signature": "MHhmNTAwZGFjOTk2MDVkYTFhMDAzY2QzOTg4YzgzNGFhNzcyZDlhNWU5YWI0MjRhODVjMzVmMTZkMzE0MjI0NWMyNTQxYTRmMDY2NmE4MGVlODhiYzM3YzQ0YTZjZGViZGU3MjFiZTM2MzY0MTU2MzJlMjdkNmRhMDZlMGM1YTQzZTFj"
   },
   "frame": {
     "version": "1",
     "name": "Billboards",
-    "iconUrl": "https://billboards.orbiter.website/icon.png",
-    "homeUrl": "https://billboards.orbiter.website",
-    "imageUrl": "https://billboards.orbiter.website/image.png",
+    "iconUrl": "https://billboards.cloud/icon.png",
+    "homeUrl": "https://billboards.cloud",
+    "imageUrl": "https://billboards.cloud/image.png",
     "buttonTitle": "Post",
-    "splashImageUrl": "https://billboards.orbiter.website/splash.png",
+    "splashImageUrl": "https://billboards.cloud/splash.png",
     "splashBackgroundColor": "#FEF3C8"
   }
 }
