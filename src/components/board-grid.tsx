@@ -40,9 +40,8 @@ export function BoardGrid({ refetchTrigger }: BoardGridProps) {
   return (
     <div className="flex flex-col gap-4">
       {boards.map((board) => (
-        <Link to={`/board/${board.slug}`}>
+        <Link key={board.id} to={`/board/${board.slug}`}>
           <ImageCard
-            key={board.id}
             caption={board.name}
             imageUrl={board.board_images[0].image_url}
           ></ImageCard>
