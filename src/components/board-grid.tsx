@@ -5,18 +5,27 @@ import ImageCard from "./ui/image-card"
 
 type BoardGridProps = {
   refetchTrigger: number
+  message: string
+  signature: string
+  nonce: string
 }
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:8787"
 
-export function BoardGrid({ refetchTrigger }: BoardGridProps) {
+export function BoardGrid({ refetchTrigger, message, nonce, signature }: BoardGridProps) {
   const [boards, setBoards] = useState<BoardDetails[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetchBoards() {
       try {
-        const response = await fetch(`${SERVER_URL}/boards/6023`)
+        const response = await fetch(`${SERVER_URL}/boards`, {
+          headers: {
+            "message": message,
+            "nonce": nonce,
+            "signature": signature
+          },
+        })
         if (!response.ok) {
           throw new Error("Failed to fetch boards")
         }
@@ -31,7 +40,7 @@ export function BoardGrid({ refetchTrigger }: BoardGridProps) {
     }
 
     fetchBoards()
-  }, [refetchTrigger])
+  }, [refetchTrigger, message, nonce, signature])
 
   if (loading) {
     return <div className="text-center p-4">Loading boards...</div>

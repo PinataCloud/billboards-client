@@ -17,6 +17,7 @@ import { nanoid } from "nanoid"
 import { BoardGrid } from "./board-grid"
 import { Link } from "react-router-dom"
 import { X } from "lucide-react" // Import an icon for the remove button
+import { FrameSDK } from "@farcaster/frame-sdk/dist/types"
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:8787"
 
@@ -27,13 +28,23 @@ type FileWithCaption = {
   preview?: string;
 };
 
-export function Dashboard() {
+export function Dashboard({ sdk }: { sdk: FrameSDK }) {
   const [open, setOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [progress, setProgress] = useState(0)
   const [selectedFiles, setSelectedFiles] = useState<FileWithCaption[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [shouldRefetch, setShouldRefetch] = useState(0)
+  const [isAuthenticating, setIsAuthenticating] = useState(false)
+  const [nonce, setNonce] = useState('');
+  const [message, setMessage] = useState('')
+  const [signature, setSignature] = useState('')
+  const isAuthenticated = !!signature
+
+  useEffect(() => {
+    setNonce(nanoid(16));
+  }, []);
+
 
   // Add a file to the selected files list
   const handleFileAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,7 +102,18 @@ export function Dashboard() {
     try {
       for (let i = 0; i < selectedFiles.length; i++) {
         const { file, caption } = selectedFiles[i];
-        const urlReq = await fetch(`${SERVER_URL}/presigned_url`);
+        const urlBody = JSON.stringify({
+          nonce,
+          message,
+          signature
+        })
+        const urlReq = await fetch(`${SERVER_URL}/presigned_url`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: urlBody
+        });
         const urlRes = await urlReq.json();
         if (!urlReq.ok) {
           console.log("Error", urlRes);
@@ -121,10 +143,12 @@ export function Dashboard() {
       // Create the request body with both images and captions
       const data = JSON.stringify({
         boardName,
-        fid: 6023,
         imageLinks: uploadedImages,
         captions: imageCaptions, // Send captions array in same order as imageLinks
-        slug
+        slug,
+        nonce,
+        message,
+        signature
       });
 
       const createBoardRequest = await fetch(`${SERVER_URL}/boards`, {
@@ -153,6 +177,20 @@ export function Dashboard() {
     setSelectedFiles([]); // Clear files on success
   };
 
+  async function signIn() {
+    setIsAuthenticating(true)
+    try {
+      const data = await sdk.actions.signIn({ nonce });
+      console.log(data)
+      setSignature(data.signature)
+      setMessage(data.message)
+    } catch (error) {
+      console.error("Error during sign in:", error)
+    } finally {
+      setIsAuthenticating(false)
+    }
+  }
+
   // Clean up previews when component unmounts
   useEffect(() => {
     return () => {
@@ -160,7 +198,27 @@ export function Dashboard() {
         if (file.preview) URL.revokeObjectURL(file.preview);
       });
     };
-  }, []);
+  }, [selectedFiles]);
+
+  if (!isAuthenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[70vh] w-full">
+        <div className="bg-white p-8 rounded-lg shadow-shadowFull max-w-sm w-full text-center">
+          <Link to="/">
+            <h1 className='font-black text-4xl pb-6 text-center'>Billboards</h1>
+          </Link>
+          <p className="mb-6 text-gray-600">Sign in with your Farcaster account to view and create boards</p>
+          <Button
+            onClick={signIn}
+            disabled={isAuthenticating}
+            className="w-full"
+          >
+            {isAuthenticating ? "Signing in..." : "Sign in"}
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4 w-full items-center justify-start pb-6">
@@ -283,7 +341,7 @@ export function Dashboard() {
           </form>
         </DialogContent>
       </Dialog>
-      <BoardGrid refetchTrigger={shouldRefetch} />
+      <BoardGrid nonce={nonce} signature={signature} message={message} refetchTrigger={shouldRefetch} />
     </div>
   )
 }
