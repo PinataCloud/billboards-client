@@ -1,0 +1,17 @@
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjYwMjMsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHg0NTYxMzExNjFmODNDN0Q3ZkRBMTViMzJhNWY3QzIxRkQ0RTI3RTk2In0",
+    "payload": "eyJkb21haW4iOiJiaWxsYm9hcmRzLm9yYml0ZXIud2Vic2l0ZSJ9",
+    "signature": "MHg0YTgxMjYxYTJkYWVmMTg4MTY0ZWQ1Yzg4OTBiN2Q4MTZjMTk1OWVlODA2MDNlY2FiN2UxOTEwMzcyZWE5YTMxNDgwMjA3MWI4NDM3Zjg1MmQ5NzJhNDI0ZTFmYTdkMjFmNGUwOTA1M2UwNjllMWRlNTY0N2ZkODljZmI4OTIwMjFi"
+  },
+  "frame": {
+    "version": "1",
+    "name": "Billboards",
+    "iconUrl": "https://billboards.orbiter.website/icon.png",
+    "homeUrl": "https://billboards.orbiter.website",
+    "imageUrl": "https://billboards.orbiter.website/image.png",
+    "buttonTitle": "Post",
+    "splashImageUrl": "https://billboards.orbiter.website/splash.png",
+    "splashBackgroundColor": "#FEF3C8"
+  }
+}

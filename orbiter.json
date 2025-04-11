@@ -1,0 +1,6 @@
+{
+  "siteId": "4d2c7b8f-42e4-406e-9e49-bddd999b7443",
+  "domain": "billboards",
+  "buildCommand": "bun run build",
+  "buildDir": "dist"
+}
