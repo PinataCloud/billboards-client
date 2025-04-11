@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { BoardDetails } from "@/lib/types"
 import { Link } from "react-router-dom"
-import { Button } from "./ui/button"
 import ImageCard from "./ui/image-card"
 
 type BoardGridProps = {
