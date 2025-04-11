@@ -113,9 +113,9 @@ export function Board({ sdk }: { sdk: FrameSDK }) {
       </div>
 
       {/* Caption for current image - only show when a caption exists */}
-      {currentImage && currentImage.caption && (
+      {currentImage && (
         <div className="bg-white p-3 sm:p-4 shadow-shadowFull flex items-center justify-between">
-          <p className="text-sm sm:text-base italic">{currentImage.caption}</p>
+          <p className="text-sm sm:text-base italic">{currentImage.caption || ""}</p>
           <Button onClick={shareBoard}>Share</Button>
         </div>
       )}
