@@ -117,7 +117,7 @@ export function Dashboard() {
           .url(urlRes.url)
           .keyvalues({
             slug: slug,
-            fid: fid || "",
+            fid: fid?.toString() || "",
             boardName: boardName,
             caption: caption // Include caption in metadata
           });
