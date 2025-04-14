@@ -12,6 +12,6 @@ export default defineConfig({
     },
   },
   server: {
-    allowedHosts: ['steves-macbook-pro.dachshund-deneb.ts.net']
+    allowedHosts: ['steves-macbook-pro.tailadeea5.ts.net']
   }
 })

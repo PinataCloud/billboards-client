@@ -10,7 +10,7 @@ type BoardGridProps = {
   nonce: string
 }
 
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:8787"
+const SERVER_URL = "https://billboards-server.pinata-marketing-enterprise.workers.dev"
 
 export function BoardGrid({ refetchTrigger, message, nonce, signature }: BoardGridProps) {
   const [boards, setBoards] = useState<BoardDetails[]>([])
@@ -19,12 +19,16 @@ export function BoardGrid({ refetchTrigger, message, nonce, signature }: BoardGr
   useEffect(() => {
     async function fetchBoards() {
       try {
-        const response = await fetch(`${SERVER_URL}/boards`, {
+        const response = await fetch(`${SERVER_URL}/list-boards`, {
+          method: "POST",
           headers: {
-            "message": message,
-            "nonce": nonce,
-            "signature": signature
+            "Content-Type": "application/json"
           },
+          body: JSON.stringify({
+            message,
+            nonce,
+            signature
+          })
         })
         if (!response.ok) {
           throw new Error("Failed to fetch boards")

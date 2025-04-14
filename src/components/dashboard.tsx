@@ -18,8 +18,9 @@ import { BoardGrid } from "./board-grid"
 import { Link } from "react-router-dom"
 import { X } from "lucide-react" // Import an icon for the remove button
 import { FrameSDK } from "@farcaster/frame-sdk/dist/types"
+import { v4 as uuidv4 } from "uuid";
 
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:8787"
+const SERVER_URL = "https://billboards-server.pinata-marketing-enterprise.workers.dev"
 
 // Define a type for files with captions
 type FileWithCaption = {
@@ -42,7 +43,9 @@ export function Dashboard({ sdk }: { sdk: FrameSDK }) {
   const isAuthenticated = !!signature
 
   useEffect(() => {
-    setNonce(nanoid(16));
+    setNonce(
+      uuidv4().split("-").join("d")
+    );
   }, []);
 
 
