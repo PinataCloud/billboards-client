@@ -10,7 +10,7 @@ import {
 import { Button } from './ui/button';
 import { FrameSDK } from '@farcaster/frame-sdk/dist/types';
 
-const SERVER_URL = "https://billboards-server.pinata-marketing-enterprise.workers.dev"
+const SERVER_URL = import.meta.env.VITE_SERVER_URL
 
 export function Board({ sdk }: { sdk: FrameSDK }) {
   const { slug } = useParams();
@@ -59,7 +59,7 @@ export function Board({ sdk }: { sdk: FrameSDK }) {
   async function shareBoard() {
     await sdk.actions.composeCast({
       text: "Check out this fun board!",
-      embeds: [`https://billboards.cloud/board/${slug}`]
+      embeds: [`${SERVER_URL}/embed/${slug}`]
     })
   }
 
