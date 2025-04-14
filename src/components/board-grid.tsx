@@ -2,22 +2,26 @@ import { useEffect, useState } from "react"
 import { BoardDetails } from "@/lib/types"
 import { Link } from "react-router-dom"
 import ImageCard from "./ui/image-card"
+import { useAuth } from "@/hooks/useAuth"
 
 type BoardGridProps = {
   refetchTrigger: number
-  message: string
-  signature: string
-  nonce: string
 }
 
-const SERVER_URL = "https://billboards-server.pinata-marketing-enterprise.workers.dev"
+const SERVER_URL = import.meta.env.VITE_SERVER_URL
 
-export function BoardGrid({ refetchTrigger, message, nonce, signature }: BoardGridProps) {
+export function BoardGrid({ refetchTrigger }: BoardGridProps) {
+  const { nonce, message, signature, isAuthenticated } = useAuth();
   const [boards, setBoards] = useState<BoardDetails[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetchBoards() {
+      if (!isAuthenticated) {
+        setLoading(false);
+        return;
+      }
+
       try {
         const response = await fetch(`${SERVER_URL}/list-boards`, {
           method: "POST",
@@ -44,10 +48,18 @@ export function BoardGrid({ refetchTrigger, message, nonce, signature }: BoardGr
     }
 
     fetchBoards()
-  }, [refetchTrigger, message, nonce, signature])
+  }, [refetchTrigger, message, nonce, signature, isAuthenticated])
 
   if (loading) {
     return <div className="text-center p-4">Loading boards...</div>
+  }
+
+  if (boards.length === 0) {
+    return (
+      <div className="text-center p-4 mt-8">
+        <p className="text-gray-600 mb-4">You haven't created any boards yet.</p>
+      </div>
+    );
   }
 
   return (

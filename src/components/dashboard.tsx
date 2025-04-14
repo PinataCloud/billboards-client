@@ -17,10 +17,9 @@ import { nanoid } from "nanoid"
 import { BoardGrid } from "./board-grid"
 import { Link } from "react-router-dom"
 import { X } from "lucide-react" // Import an icon for the remove button
-import { FrameSDK } from "@farcaster/frame-sdk/dist/types"
-import { v4 as uuidv4 } from "uuid";
+import { useAuth } from "@/hooks/useAuth"
 
-const SERVER_URL = "https://billboards-server.pinata-marketing-enterprise.workers.dev"
+const SERVER_URL = import.meta.env.VITE_SERVER_URL
 
 // Define a type for files with captions
 type FileWithCaption = {
@@ -29,25 +28,14 @@ type FileWithCaption = {
   preview?: string;
 };
 
-export function Dashboard({ sdk }: { sdk: FrameSDK }) {
+export function Dashboard() {
+  const { isAuthenticated, isAuthenticating, nonce, message, signature, fid, signIn, signOut } = useAuth();
   const [open, setOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [progress, setProgress] = useState(0)
   const [selectedFiles, setSelectedFiles] = useState<FileWithCaption[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [shouldRefetch, setShouldRefetch] = useState(0)
-  const [isAuthenticating, setIsAuthenticating] = useState(false)
-  const [nonce, setNonce] = useState('');
-  const [message, setMessage] = useState('')
-  const [signature, setSignature] = useState('')
-  const isAuthenticated = !!signature
-
-  useEffect(() => {
-    setNonce(
-      uuidv4().split("-").join("d")
-    );
-  }, []);
-
 
   // Add a file to the selected files list
   const handleFileAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,7 +117,7 @@ export function Dashboard({ sdk }: { sdk: FrameSDK }) {
           .url(urlRes.url)
           .keyvalues({
             slug: slug,
-            fid: "6023",
+            fid: fid || "",
             boardName: boardName,
             caption: caption // Include caption in metadata
           });
@@ -180,20 +168,6 @@ export function Dashboard({ sdk }: { sdk: FrameSDK }) {
     setSelectedFiles([]); // Clear files on success
   };
 
-  async function signIn() {
-    setIsAuthenticating(true)
-    try {
-      const data = await sdk.actions.signIn({ nonce });
-      console.log(data)
-      setSignature(data.signature)
-      setMessage(data.message)
-    } catch (error) {
-      console.error("Error during sign in:", error)
-    } finally {
-      setIsAuthenticating(false)
-    }
-  }
-
   // Clean up previews when component unmounts
   useEffect(() => {
     return () => {
@@ -236,9 +210,12 @@ export function Dashboard({ sdk }: { sdk: FrameSDK }) {
           <Link to="/">
             <h1 className='font-black text-4xl pb-4 text-center py-2'>Billboards</h1>
           </Link>
-          <DialogTrigger asChild className="max-w-[300px] w-full">
-            <Button>Create</Button>
-          </DialogTrigger>
+          <div className="flex items-center gap-4 max-w-[300px] w-full">
+            <DialogTrigger asChild className="flex-1">
+              <Button>Create</Button>
+            </DialogTrigger>
+            <Button variant="neutral" onClick={signOut}>Sign Out</Button>
+          </div>
         </div>
         <DialogContent className="sm:max-w-[500px] min-h-[600px]">
           <form
@@ -344,7 +321,7 @@ export function Dashboard({ sdk }: { sdk: FrameSDK }) {
           </form>
         </DialogContent>
       </Dialog>
-      <BoardGrid nonce={nonce} signature={signature} message={message} refetchTrigger={shouldRefetch} />
+      <BoardGrid refetchTrigger={shouldRefetch} />
     </div>
   )
 }

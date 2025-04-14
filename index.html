@@ -4,8 +4,13 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="fc:frame" content='{"version":"next","imageUrl":"https://billboards.cloud/image.png","button":{"title":"Launch","action":{"type":"launch_frame","name":"Post","url":"https://steves-macbook-pro.tailadeea5.ts.net","splashImageUrl":"https://billboards.cloud/splash.png","splashBackgroundColor":"#FEF3C8"}}}' />
+    <meta name="fc:frame" content='{"version":"next","imageUrl":"%VITE_BASE_URL%/image.png","button":{"title":"Launch","action":{"type":"launch_frame","name":"Post","url":"%VITE_BASE_URL%","splashImageUrl":"%VITE_BASE_URL%/splash.png","splashBackgroundColor":"#FEF3C8"}}}' />
     <title>Billboards</title>
+    <script>
+       window.ENV = {
+         VITE_BASE_URL: "%VITE_BASE_URL%"
+       };
+     </script>
   </head>
   <body>
     <div id="root"></div>
