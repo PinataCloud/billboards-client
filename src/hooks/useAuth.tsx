@@ -78,7 +78,7 @@ export function AuthProvider({ children, sdk }: { children: React.ReactNode; sdk
 
       // Verify the signature on the server and get the FID
       try {
-        const response = await fetch('https://billboards-server.pinata-marketing-enterprise.workers.dev/verify', {
+        const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/verify`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -146,7 +146,7 @@ export function AuthProvider({ children, sdk }: { children: React.ReactNode; sdk
     signOut
   };
 
-  return <AuthContext.Provider value={ value }> { children } </AuthContext.Provider>;
+  return <AuthContext.Provider value={value}> {children} </AuthContext.Provider>;
 }
 
 export function useAuth() {
