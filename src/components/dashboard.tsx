@@ -16,6 +16,7 @@ import { Progress } from "@/components/ui/progress"
 import { nanoid } from "nanoid"
 import { BoardGrid } from "./board-grid"
 import { Link } from "react-router-dom"
+import { Link as FCLink } from "@mini_apps/utilities"
 import { X } from "lucide-react" // Import an icon for the remove button
 import { useAuth } from "@/hooks/useAuth"
 
@@ -29,7 +30,7 @@ type FileWithCaption = {
 };
 
 export function Dashboard() {
-  const { isAuthenticated, isAuthenticating, nonce, message, signature, fid, signIn, signOut } = useAuth();
+  const { isAuthenticated, isAuthenticating, nonce, message, signature, fid, signIn } = useAuth();
   const [open, setOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -182,8 +183,12 @@ export function Dashboard() {
       <div className="flex flex-col items-center justify-center min-h-[70vh] w-full">
         <div className="bg-white p-8 rounded-lg shadow-shadowFull max-w-sm w-full text-center">
           <Link to="/">
-            <h1 className='font-black text-4xl pb-6 text-center'>Billboards</h1>
+            <h1 className='font-black text-4xl text-center'>Billboards</h1>
           </Link>
+          <FCLink href="https://pinata.cloud" className="flex flex-row gap-2 items-center w-full justify-center pb-2">
+            by
+            <img src="/pinata.png" alt="pinata-logo" className="max-h-12" />
+          </FCLink>
           <p className="mb-6 text-gray-600">Sign in with your Farcaster account to view and create boards</p>
           <Button
             onClick={signIn}
@@ -208,13 +213,16 @@ export function Dashboard() {
       }}>
         <div className='w-full bg-white flex flex-col items-center py-4 shadow-shadowFull'>
           <Link to="/">
-            <h1 className='font-black text-4xl pb-4 text-center py-2'>Billboards</h1>
+            <h1 className='font-black text-4xl text-center'>Billboards</h1>
           </Link>
+          <FCLink href="https://pinata.cloud" className="flex flex-row gap-2 items-center w-full justify-center pb-2">
+            by
+            <img src="/pinata.png" alt="pinata-logo" className="max-h-12" />
+          </FCLink>
           <div className="flex items-center gap-4 max-w-[300px] w-full">
             <DialogTrigger asChild className="flex-1">
               <Button>Create</Button>
             </DialogTrigger>
-            <Button variant="neutral" onClick={signOut}>Sign Out</Button>
           </div>
         </div>
         <DialogContent className="sm:max-w-[500px] min-h-[600px]">
