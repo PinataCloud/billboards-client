@@ -9,15 +9,28 @@ import {
 } from '@/components/ui/carousel';
 import { Button } from './ui/button';
 import { FrameSDK } from '@farcaster/frame-sdk/dist/types';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose
+} from './ui/dialog';
+import { Input } from './ui/input';
+import { Share } from 'lucide-react';
+import { Context } from '@farcaster/frame-sdk';
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL
 
-export function Board({ sdk }: { sdk: FrameSDK }) {
+export function Board({ sdk, context }: { sdk: FrameSDK, context: Context.FrameContext | undefined }) {
   const { slug } = useParams();
   const [boardData, setBoardData] = useState<BoardDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const fetchBoard = async () => {
@@ -55,18 +68,33 @@ export function Board({ sdk }: { sdk: FrameSDK }) {
     };
   }, [carouselApi]);
 
+  // Reset copied state when dialog closes
+  useEffect(() => {
+    if (!shareDialogOpen) {
+      setCopied(false);
+    }
+  }, [shareDialogOpen]);
 
   async function shareBoard() {
     await sdk.actions.composeCast({
       text: "Check out this fun board!",
       embeds: [`${SERVER_URL}/embed/${slug}`]
-    })
+    });
+  }
+
+  function handleCopyLink() {
+    const url = context ? `${SERVER_URL}/embed/${slug}` : `${window.location.origin}/board/${slug}`
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
   }
 
   if (loading) return <div className="h-screen w-full flex items-center justify-center">Loading...</div>;
   if (!boardData) return <div className="h-screen w-full flex items-center justify-center">Board not found</div>;
 
   const currentImage = boardData.board_images[currentIndex];
+  const shareUrl = context ? `${SERVER_URL}/embed/${slug}` : `${window.location.origin}/board/${slug}`
 
   return (
     <div className="relative h-screen w-full flex flex-col safe-area-inset">
@@ -116,9 +144,43 @@ export function Board({ sdk }: { sdk: FrameSDK }) {
       {currentImage && (
         <div className="bg-white p-3 sm:p-4 shadow-shadowFull flex items-center justify-between">
           <p className="text-sm sm:text-base italic">{currentImage.caption || ""}</p>
-          <Button onClick={shareBoard}>Share</Button>
+          <Button onClick={() => setShareDialogOpen(true)}>
+            <Share className="mr-2 h-4 w-4" />
+            Share
+          </Button>
         </div>
       )}
+
+      {/* Share Dialog */}
+      <Dialog open={shareDialogOpen} onOpenChange={setShareDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogTitle>Share this board</DialogTitle>
+          <DialogDescription>
+            Copy the link to share this board with others
+          </DialogDescription>
+          <div className="flex items-center space-x-2 mt-2">
+            <div className="grid flex-1 gap-2">
+              <Input
+                id="link"
+                readOnly
+                value={shareUrl}
+                className="w-full"
+              />
+            </div>
+            <Button onClick={handleCopyLink}>
+              {copied ? "Copied!" : "Copy"}
+            </Button>
+          </div>
+          <DialogFooter className="mt-4 flex justify-between">
+            <DialogClose asChild>
+              <Button variant="neutral">Close</Button>
+            </DialogClose>
+            <Button onClick={shareBoard}>
+              Share to Farcaster
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
