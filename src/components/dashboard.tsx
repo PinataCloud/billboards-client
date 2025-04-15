@@ -253,7 +253,7 @@ export function Dashboard() {
                     id="file"
                     name="file"
                     type="file"
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml,image/heic,image/heif"
                     disabled={isSubmitting}
                     ref={fileInputRef}
                     onChange={handleFileAdd}
